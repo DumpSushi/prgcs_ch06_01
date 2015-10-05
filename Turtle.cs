@@ -57,37 +57,56 @@ namespace ch06_01
 		// 指定した時間だけタートルを走行させます。
 		public void RunFor(double duration)
 		{
-			if (LeftMotorState == MotorState.Stopped &&
-				RightMotorState == MotorState.Stopped)
+			try
 			{
-				// 完全に止まっている場合は何もしません。
-				return;
-			}
+				if (LeftMotorState == MotorState.Stopped &&
+					RightMotorState == MotorState.Stopped)
+				{
+					// 完全に止まっている場合は何もしません。
+					return;
+				}
 
-			// モーターが同じ方向に動いている場合には直進します。
-			if ((LeftMotorState == MotorState.Running &&
-				RightMotorState == MotorState.Running) ||
-				(LeftMotorState == MotorState.Reversed &&
-				RightMotorState == MotorState.Reversed))
-			{
-				Drive(duration);
-				return;
-			}
+				// モーターが同じ方向に動いている場合には直進します。
+				if ((LeftMotorState == MotorState.Running &&
+					RightMotorState == MotorState.Running) ||
+					(LeftMotorState == MotorState.Reversed &&
+					RightMotorState == MotorState.Reversed))
+				{
+					Drive(duration);
+					return;
+				}
 
-			// モーターが反対方向に動いている場合には回転します。
-			if ((LeftMotorState == MotorState.Running &&
-				RightMotorState == MotorState.Reversed) ||
-				(LeftMotorState == MotorState.Reversed &&
-				RightMotorState == MotorState.Running))
+				// モーターが反対方向に動いている場合には回転します。
+				if ((LeftMotorState == MotorState.Running &&
+					RightMotorState == MotorState.Reversed) ||
+					(LeftMotorState == MotorState.Reversed &&
+					RightMotorState == MotorState.Running))
+				{
+					Rotate(duration);
+					return;
+				}
+			}
+			catch (InvalidOperationException iox)
 			{
-				Rotate(duration);
-				return;
+				throw new Exception("タートルに何らかの問題が発生。", iox);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("ログメッセージ：" + ex.Message);
+				// 再スロー。
+				throw;
 			}
 		}
 
 		// 回転。
 		private void Rotate(double duration)
 		{
+			if (PlatformWidth <= 0.0)
+			{
+				throw new InvalidOperationException(
+					"PlatromWidthは0.0より大きい値に初期化しなければいけません。");
+			}
+
 			// 旋回の総円周(circumference).
 			double circum = Math.PI * PlatformWidth;
 
