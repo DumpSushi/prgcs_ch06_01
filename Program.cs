@@ -22,7 +22,7 @@ namespace ch06_01
 				arthurTheTurtle.RightMotorState = MotorState.Running;
 
 				// 2秒間。
-				arthurTheTurtle.RunFor(2.0);
+				arthurTheTurtle.RunFor(0.0);
 				ShowPosition(arthurTheTurtle);
 
 				// 時計回りに少し回転。

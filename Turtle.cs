@@ -57,6 +57,12 @@ namespace ch06_01
 		// 指定した時間だけタートルを走行させます。
 		public void RunFor(double duration)
 		{
+			if (duration <= double.Epsilon)
+			{
+				throw new ArgumentException(
+					"0より長い時間を指定する必要があります。",
+					"duration");
+			}
 			try
 			{
 				if (LeftMotorState == MotorState.Stopped &&
@@ -95,6 +101,10 @@ namespace ch06_01
 				Console.WriteLine("ログメッセージ：" + ex.Message);
 				// 再スロー。
 				throw;
+			}
+			finally
+			{
+				Console.WriteLine("Turtleのfinallyブロック内。");
 			}
 		}
 
